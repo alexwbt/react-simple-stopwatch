@@ -1,4 +1,29 @@
 import React, { useCallback, useState } from 'react';
+import styled from 'styled-components';
+
+const Container = styled.div`
+    text-align: center;
+    user-select: none;
+`;
+
+const Button = styled.div`
+    display: inline-block;
+    width: 200px;
+    margin: 10px;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 10px;
+    border: white 1px solid;
+
+    :hover {
+        cursor: pointer;
+        border: lightgrey 1px solid;
+    }
+`;
+
+const Display = styled.div`
+    font-size: 50px;
+`;
 
 const getTimeString = time => {
     const miliseconds = time % 1000;
@@ -41,7 +66,7 @@ const Stopwatch = () => {
 
     const lap = useCallback(() => {
         if (!running || startPauseTime > 0) return;
-        setLaps(laps => laps.concat([Date.now() - startTime - pausedTime - laps.reduce((a, b) => a + b, 0)]));
+        setLaps(laps => laps.concat(Date.now() - startTime - pausedTime - laps.reduce((a, b) => a + b, 0)));
     }, [running, startPauseTime, startTime, pausedTime]);
 
     const pause = useCallback(() => {
@@ -56,13 +81,13 @@ const Stopwatch = () => {
         }
     }, [running, startPauseTime, timerInterval, startTime]);
 
-    return <div>
-        <div>{getTimeString(time - pausedTime)}</div>
-        <div>{laps.map((time, i) => <div key={i}>{getTimeString(time)}</div>)}</div>
-        <button onClick={start}>{running ? 'stop' : 'start'}</button>
-        <button onClick={lap}>lap</button>
-        <button onClick={pause}>{startPauseTime > 0 ? 'unpause' : 'pause'}</button>
-    </div>;
+    return <Container>
+        <Display>{getTimeString(time - pausedTime)}</Display>
+        <Button onClick={start}>{running ? 'Stop' : 'Start'}</Button>
+        <Button onClick={lap}>Lap</Button>
+        <Button onClick={pause}>{startPauseTime > 0 ? 'Unpause' : 'Pause'}</Button>
+        <div>{laps.map((time, i) => <Display key={i}>{getTimeString(time)}</Display>)}</div>
+    </Container>;
 };
 
 export default Stopwatch;
