@@ -2,35 +2,37 @@ import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
-    text-align: center;
+    display: flex;
     user-select: none;
     position: relative;
-    display: flex;
+    text-align: center;
     flex-direction: column;
     width: ${props => props.width ? `${props.width}px` : '100vw'};
     height: ${props => props.height ? `${props.height}px` : '100vh'};
 `;
 
 const Display = styled.div`
-    font-size: 50px;
     flex: 1;
     position: relative;
     > div {
-        position: absolute;
         top: 50%;
         left: 50%;
+        width: 266px;
+        font-size: 50px;
+        text-align: left;
+        position: absolute;
         transform: translate(-50%, -50%);
     }
 `;
 
 const Laps = styled.div`
     flex: 1;
-    max-height: 50%;
     overflow: auto;
+    max-height: 50%;
     > div {
-        font-size: 30px;
         color: grey;
         padding: 5px;
+        font-size: 30px;
     }
 `;
 
@@ -69,7 +71,7 @@ const initialState = {
     laps: []
 };
 
-var intervalId;
+let intervalId;
 
 const Stopwatch = ({ width, height }) => {
     const [state, setState] = useState(initialState);
@@ -79,10 +81,10 @@ const Stopwatch = ({ width, height }) => {
         intervalId = setInterval(() => {
             if (state.startPauseTime > 0) return;
             if (!state.running) setState(prev => ({ ...prev, time: 0 }));
-            else setState(prev => ({ ...prev, time: Date.now() - state.startTime }));
+            else setState(prev => ({ ...prev, time: Date.now() - state.startTime - state.pausedTime }));
         });
         return () => clearInterval(intervalId);
-    }, [state.running, state.startPauseTime, state.startTime]);
+    }, [state.running, state.startPauseTime, state.startTime, state.pausedTime]);
 
     const start = useCallback(() => {
         if (state.running) setState(initialState);
@@ -106,7 +108,7 @@ const Stopwatch = ({ width, height }) => {
     }, [state.running, state.startPauseTime]);
 
     return <Container {...{ width, height }}>
-        <Display><div>{getTimeString(state.time - state.pausedTime)}</div></Display>
+        <Display><div>{getTimeString(state.time)}</div></Display>
         <div>
             <Button onClick={start}>{state.running ? 'Stop' : 'Start'}</Button>
             <Button onClick={lap}>Lap</Button>
