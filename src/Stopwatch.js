@@ -23,6 +23,13 @@ const Button = styled.div`
 
 const Display = styled.div`
     font-size: 50px;
+    padding: 10px;
+`;
+
+const Laps = styled.div`
+    font-size: 30px;
+    color: grey;
+    padding: 5px;
 `;
 
 const getTimeString = time => {
@@ -86,7 +93,7 @@ const Stopwatch = () => {
         <Button onClick={start}>{running ? 'Stop' : 'Start'}</Button>
         <Button onClick={lap}>Lap</Button>
         <Button onClick={pause}>{startPauseTime > 0 ? 'Unpause' : 'Pause'}</Button>
-        <div>{laps.map((time, i) => <Display key={i}>{getTimeString(time)}</Display>)}</div>
+        <div>{laps.map((time, i) => <Laps key={i}>{getTimeString(time)}</Laps>)}</div>
     </Container>;
 };
 
