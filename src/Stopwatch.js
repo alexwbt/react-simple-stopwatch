@@ -55,7 +55,7 @@ const getTimeString = time => {
     const seconds = Math.floor(time / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
-    const strMilliseconds = `${milliseconds}`.padEnd(3, '0');
+    const strMilliseconds = `${milliseconds}`.padStart(3, '0');
     const strSeconds = `${seconds % 60 % 60}`.padStart(2, '0');
     const strMinutes = `${minutes % 60}`.padStart(2, '0');
     const strHours = `${hours}`.padStart(2, '0');
@@ -73,7 +73,7 @@ const initialState = {
 
 let intervalId;
 
-const Stopwatch = ({ width, height }) => {
+const Stopwatch = props => {
     const [state, setState] = useState(initialState);
 
     useEffect(() => {
@@ -107,7 +107,7 @@ const Stopwatch = ({ width, height }) => {
         else setState(prev => ({ ...prev, startPauseTime: Date.now() }));
     }, [state.running, state.startPauseTime]);
 
-    return <Container {...{ width, height }}>
+    return <Container {...props}>
         <Display><div>{getTimeString(state.time)}</div></Display>
         <div>
             <Button onClick={start}>{state.running ? 'Stop' : 'Start'}</Button>
