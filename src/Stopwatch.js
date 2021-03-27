@@ -39,7 +39,7 @@ const Laps = styled.div`
 const Button = styled.div`
     display: inline-block;
     width: 200px;
-    margin: 10px;
+    margin: 20px;
     padding: 10px;
     font-size: 20px;
     border-radius: 10px;
@@ -94,7 +94,7 @@ const Stopwatch = ({ width, height }) => {
     const lap = useCallback(() => {
         if (!state.running || state.startPauseTime > 0) return;
         const deltaTime = Date.now() - state.startTime - state.pausedTime;
-        setState(prev => ({ ...prev, laps: prev.laps.concat(deltaTime - prev.laps.reduce((a, b) => a + b, 0)) }));
+        setState(prev => ({ ...prev, laps: [deltaTime - prev.laps.reduce((a, b) => a + b, 0)].concat(prev.laps) }));
     }, [state.running, state.startPauseTime, state.startTime, state.pausedTime]);
 
     const pause = useCallback(() => {
@@ -114,7 +114,7 @@ const Stopwatch = ({ width, height }) => {
             <Button onClick={lap}>Lap</Button>
             <Button onClick={pause}>{state.startPauseTime > 0 ? 'Unpause' : 'Pause'}</Button>
         </div>
-        <Laps>{state.laps.slice().reverse().map((time, i, a) => <div key={i}>{`${a.length - i}. ${getTimeString(time)}`}</div>)}</Laps>
+        <Laps>{state.laps.map((time, i, a) => <div key={i}>{`${a.length - i}. ${getTimeString(time)}`}</div>)}</Laps>
     </Container>;
 };
 
